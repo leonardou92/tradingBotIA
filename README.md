@@ -1,118 +1,82 @@
 
-# Trading Bot con Apalancamiento
+# Bot de Trading con TensorFlow.js y Binance API
 
-Este proyecto es un **bot de trading automatizado** que utiliza **TensorFlow.js** para predecir la dirección del precio de una criptomoneda (en este caso XRP/USDT). El bot realiza operaciones de compra o venta utilizando **apalancamiento**, simulando un monto de inversión y calculando la ganancia/pérdida durante la operación.
+Este proyecto implementa un bot de trading que usa TensorFlow.js para predecir la dirección del mercado de criptomonedas basándose en el análisis de los precios históricos y realiza operaciones en Binance utilizando la API de Binance. El bot simula operaciones con apalancamiento y establece un precio de Stop Loss para limitar las pérdidas.
 
 ## Requisitos
 
-Antes de ejecutar el proyecto, asegúrate de tener lo siguiente instalado en tu sistema:
+Para ejecutar el proyecto, necesitas tener instalados los siguientes requisitos:
 
-- **Node.js** (versión 14 o superior)
-- **npm** (que se instala junto con Node.js)
-- **TensorFlow.js** (para la parte de predicción)
+- **Node.js**: Asegúrate de tener instalado Node.js (versión 14 o superior). Puedes descargarlo desde [aquí](https://nodejs.org/).
+- **npm** (Node Package Manager): Viene con Node.js, pero asegúrate de que esté actualizado ejecutando `npm install -g npm` en la terminal.
 
-## Pasos para Correr el Proyecto
+## Instalación
 
-### Paso 1: Clonar el Repositorio
+1. **Clonar el repositorio**:
 
-Abre una terminal o línea de comandos y ejecuta el siguiente comando para clonar el repositorio:
+   Clona este repositorio a tu máquina local:
 
-```bash
-git clone https://github.com/tu-usuario/trading-bot-con-apalancamiento.git
-cd trading-bot-con-apalancamiento
-```
+   ```bash
+   git clone https://github.com/usuario/tu-repositorio.git
+   ```
 
-Este comando descargará el código fuente del proyecto en tu máquina local y se moverá al directorio del proyecto.
+2. **Instalar dependencias**:
 
-### Paso 2: Instalar Dependencias
+   Navega al directorio del proyecto y ejecuta el siguiente comando para instalar las dependencias necesarias:
 
-El proyecto utiliza `npm` para manejar las dependencias. Asegúrate de tener **Node.js** instalado. Si no lo tienes, puedes descargarlo e instalarlo desde [aquí](https://nodejs.org/).
+   ```bash
+   cd tu-repositorio
+   npm install
+   ```
 
-Una vez dentro del directorio del proyecto, ejecuta el siguiente comando para instalar todas las dependencias necesarias:
+3. **Obtener las credenciales de Binance**:
 
-```bash
-npm install
-```
+   Si aún no tienes una cuenta de Binance, regístrate en [Binance](https://www.binance.com/). Luego, obtén las claves API desde la [página de gestión de API de Binance](https://www.binance.com/en/my/settings/api-management). Añade las credenciales de API a las variables de entorno.
 
-Este comando instalará las bibliotecas necesarias para ejecutar el bot de trading, tales como:
+## Uso
 
-- **@tensorflow/tfjs-node**: TensorFlow.js para Node.js.
-- **node-fetch**: Para hacer solicitudes HTTP y obtener datos de Binance.
+1. **Configuración de parámetros**:
 
-### Paso 3: Configurar Parámetros en el Código
+   Antes de ejecutar el bot, asegúrate de haber configurado correctamente los siguientes parámetros:
 
-Antes de ejecutar el bot, asegúrate de configurar correctamente los parámetros en el archivo `index.js`. Aquí hay algunas configuraciones clave que puedes modificar según tus necesidades:
+   - `symbol`: El símbolo de la criptomoneda que quieres negociar (por ejemplo, 'XRPUSDT').
+   - `interval`: El intervalo de las velas (por ejemplo, '15m' para 15 minutos).
+   - `lookBackPeriod`: El número de velas históricas que el modelo utilizará para predecir el mercado.
+   - `sequenceLength`: El número de velas anteriores para realizar el análisis.
+   - `investmentAmount`: El monto en USDT que se invertirá en cada operación.
+   - `stopLossPercentage`: El porcentaje de stop loss para limitar las pérdidas.
+   - `maxLeverage`: El apalancamiento máximo que se puede utilizar.
 
-1. **Par de criptomonedas a operar**: En el archivo `index.js`, busca la siguiente variable y cámbiala al par de criptomonedas que deseas operar (por ejemplo, `'XRPUSDT'`).
+2. **Ejecutar el bot**:
 
-    ```javascript
-    const symbol = 'XRPUSDT'; // Par de criptomonedas a operar
-    ```
+   Una vez configurado, puedes ejecutar el bot utilizando el siguiente comando:
 
-2. **Intervalo de las velas**: Especifica el intervalo de tiempo para las velas (por ejemplo, `'1m'`, `'5m'`, `'15m'`, etc.). El intervalo define el tiempo que cada vela representará.
+   ```bash
+   node bot.js
+   ```
 
-    ```javascript
-    const interval = '15m';   // Intervalo de tiempo de las velas
-    ```
+   El bot descargará datos de precios históricos desde Binance, entrenará el modelo de predicción usando TensorFlow.js y realizará operaciones de compra o venta según la predicción. Las decisiones y resultados de las operaciones se mostrarán en la terminal.
 
-3. **Monto de inversión**: Aquí defines el monto en USDT que deseas invertir en cada operación.
+## Cómo Funciona
 
-    ```javascript
-    const investmentAmount = 100;  // Monto en USDT para invertir
-    ```
+1. **Obtención de datos del mercado**: El bot utiliza la API de Binance para obtener datos históricos de precios de la criptomoneda especificada. Los datos obtenidos son las velas (OHLC) con el precio de cierre.
 
-4. **Porcentaje de Stop Loss**: Este valor define el porcentaje de Stop Loss para limitar las pérdidas en caso de que el mercado se mueva en contra de la predicción.
+2. **Entrenamiento del modelo**: Utiliza TensorFlow.js para procesar los datos históricos, crear secuencias de precios y entrenar un modelo LSTM (Long Short-Term Memory) para predecir la dirección futura del precio (sube o baja).
 
-    ```javascript
-    const stopLossPercentage = 0.02;  // Porcentaje de Stop Loss (2%)
-    ```
+3. **Predicción**: Una vez entrenado, el modelo realiza una predicción de la dirección del mercado y decide si realizar una operación de compra o venta.
 
-### Paso 4: Ejecutar el Bot de Trading
+4. **Simulación de operaciones**: El bot simula la operación utilizando apalancamiento y establece un precio de stop loss. Realiza un seguimiento del precio del activo en tiempo real durante el tiempo establecido y evalúa la ganancia o pérdida.
 
-Una vez configurado el archivo `index.js` con los parámetros deseados, ejecuta el bot usando el siguiente comando:
+5. **Gestión del riesgo**: El bot calcula el apalancamiento y la duración de la operación basándose en la fuerza de la predicción y establece un precio de stop loss para minimizar las pérdidas.
 
-```bash
-node index.js
-```
+## Consideraciones
 
-El bot comenzará a predecir la dirección del mercado (subirá o bajará) basándose en el modelo de TensorFlow.js y realizará operaciones simuladas de compra o venta.
+- **Estrategia de Trading**: Este bot simula operaciones basadas en predicciones de precios a corto plazo, utilizando un modelo LSTM para el análisis. No se recomienda usar este bot en cuentas reales sin realizar pruebas exhaustivas.
+- **Stop Loss**: El bot implementa un sistema de stop loss para proteger las operaciones en caso de movimientos adversos del mercado.
+- **Riesgos**: El uso de apalancamiento puede aumentar las ganancias, pero también incrementa el riesgo. Asegúrate de entender los riesgos asociados antes de utilizar apalancamiento.
 
-### Paso 5: Ver los Resultados
+## Mejoras Futuras
 
-El bot imprimirá en la terminal los resultados de la operación simulada, que incluyen:
-
-- La **decisión de compra o venta**.
-- El **precio de compra** y el **Stop Loss**.
-- La **dirección de la operación**.
-- La **ganancia o pérdida** de la operación.
-
-Ejemplo de salida en la terminal:
-
-```
-Decisión: Comprar
-Dirección: Subida
-Apalancamiento: 10x
-Precio de Compra: 1.25 USDT
-Stop Loss: 1.22 USDT
-Ganancia/Pérdida: 5.3% en 3 horas
-```
-
-### Paso 6: Personalización
-
-Puedes personalizar varios aspectos del bot para adaptarlo a tus necesidades. Algunos de los parámetros que puedes modificar son:
-
-- **Par de criptomonedas**: Si deseas operar con otro par de criptomonedas, cambia el valor de `symbol` (por ejemplo, `'BTCUSDT'`).
-- **Intervalo de las velas**: Puedes elegir entre diferentes intervalos como `'1m'`, `'5m'`, `'15m'`, etc.
-- **Monto de inversión**: Ajusta la cantidad de USDT que deseas invertir en cada operación.
-- **Stop Loss**: Cambia el porcentaje de Stop Loss según tu tolerancia al riesgo.
-
-### Paso 7: Mejorar el Modelo
-
-Este bot utiliza un modelo básico de **Long Short-Term Memory (LSTM)** para la predicción del precio. Si deseas mejorar la precisión del modelo, puedes entrenarlo con más datos históricos o ajustar los hiperparámetros del modelo.
-
-Para entrenar el modelo con más datos, sigue los siguientes pasos:
-
-1. **Obtén datos históricos**: Descarga más datos históricos desde Binance u otra fuente de datos.
-2. **Entrena el modelo**: Ajusta los hiperparámetros del modelo, como el número de unidades en las capas LSTM o el número de épocas.
-3. **Evalúa el modelo**: Usa datos de prueba para verificar la precisión de las predicciones.
-
+- **Optimización del modelo**: Mejorar la precisión del modelo de predicción mediante la integración de más indicadores técnicos y análisis fundamental.
+- **Integración con WebSockets**: Mejorar la respuesta en tiempo real mediante la integración con WebSockets de Binance para obtener datos de precios en tiempo real.
+- **Implementación en Binance API Real**: Actualmente el bot es una simulación. En el futuro, se puede implementar para operar en cuentas reales utilizando la API de Binance.
