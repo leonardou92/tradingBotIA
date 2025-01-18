@@ -1,0 +1,23 @@
+{
+  "name": "binance",
+  "version": "1.0.0",
+  "description": "Bot de trading para analizar el mercado de XRP en Binance usando TensorFlow.",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs": "^3.0.0",
+    "@tensorflow/tfjs-node": "^4.22.0",
+    "axios": "^0.24.0",
+    "binance-api-node": "^0.12.9",
+    "node-fetch": "^3.3.2",
+    "technicalindicators": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "author": "Tu Nombre",
+  "license": "MIT",
+  "type": "module"
+}
