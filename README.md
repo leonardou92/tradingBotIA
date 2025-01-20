@@ -25,7 +25,7 @@ Para ejecutar el proyecto, necesitas tener instalados los siguientes requisitos:
    Navega al directorio del proyecto y ejecuta el siguiente comando para instalar las dependencias necesarias:
 
    ```bash
-   cd tu-repositorio
+   cd tradingBotIA
    npm install
    ```
 
