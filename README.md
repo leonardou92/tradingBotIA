@@ -17,7 +17,7 @@ Para ejecutar el proyecto, necesitas tener instalados los siguientes requisitos:
    Clona este repositorio a tu máquina local:
 
    ```bash
-   git clone https://github.com/usuario/tu-repositorio.git
+   git clone https://github.com/leonardou92/tradingBotIA.git
    ```
 
 2. **Instalar dependencias**:
